@@ -1,0 +1,34 @@
+﻿<Page x:Class="ProjectTracker.View.Pages.AccountCreationPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:ProjectTracker.View.Pages"
+      xmlns:vm="clr-namespace:ProjectTracker.ViewModel.PageViewModels"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="AccountCreationPage">
+    <Page.Resources>
+        <vm:AccountCreationPageViewModel x:Key="VM"/>
+    </Page.Resources>
+
+    <Grid DataContext="{StaticResource VM}">
+        <StackPanel Orientation="Vertical" Background="LightGray"
+                    Width="250" Height="300">
+            <Label Content="User name:" FontSize="15"
+                   Margin="0 50 0 0" HorizontalAlignment="Center"/>
+            <TextBox Margin="60 0 60 0" Text="{Binding User.Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            <Button Content="Generate number" Margin="60 20 60 10"
+                    Command="{Binding GenerateNumberCommand}"/>
+            <TextBox Margin="60 0 60 0" Text="{Binding User.Number}"
+                     IsReadOnly="True" HorizontalContentAlignment="Center"/>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center"
+                        Margin="10 20">
+                <Button Content="Create" Margin="10 10" Width="80"
+                        Command="{Binding CreateCommand}" CommandParameter="{StaticResource MainWindowVM}"/>
+                <Button Content="Cancel" Margin="10 10" Width="80"
+                        Command="{Binding CancelCommand}" CommandParameter="{StaticResource MainWindowVM}"/>
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</Page>

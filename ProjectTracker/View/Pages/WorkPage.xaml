@@ -1,0 +1,131 @@
+﻿<Page x:Class="ProjectTracker.View.Pages.WorkPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:ProjectTracker.View.Pages"
+      xmlns:c="clr-namespace:ProjectTracker.ViewModel.Converters"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="WorkPage">
+    <Page.Resources>
+        <c:IsNullToBoolConverter x:Key="nullToBoolConverter"/>
+        <c:FullToFilteredListConverter x:Key="fullToFilteredListConverter"/>
+    </Page.Resources>
+
+    <StackPanel Orientation="Horizontal" DataContext="{StaticResource WorkPageVM}"
+                HorizontalAlignment="Center" VerticalAlignment="Center">
+        
+        <StackPanel Orientation="Vertical">
+            <StackPanel Orientation="Vertical" Background="LightGray"
+                        Margin="0 0 0 10" Width="200" Height="160">
+                <StackPanel Orientation="Horizontal" Background="Gray">
+                    <Button Content="Open" Margin="5"
+                            Command="{Binding WPOpenProjectCommand}"/>
+                    <Button Content="Wrap it up" Margin="5"
+                        IsEnabled="{Binding LoadedProject, Converter={StaticResource nullToBoolConverter}}"/>
+                </StackPanel>
+                <Separator Margin="5"/>
+                <Label Content="Working on:" HorizontalAlignment="Center"/>
+                <TextBlock Text="{Binding LoadedProject.Name}" 
+                           FontSize="15" TextWrapping="Wrap" TextAlignment="Center"/>
+                <Separator Margin="5 10 5 10"/>
+                <TextBlock Text="{Binding LoadedProject.Descsription}" 
+                           TextWrapping="Wrap" TextAlignment="Center" 
+                           FontSize="10" Margin="10 0 10 0"/>
+            </StackPanel>
+            <StackPanel Orientation="Vertical" Width="200">
+                <TabControl x:Name="taskListTabs" TabStripPlacement="top" Height="230"
+                            Background="LightGray">
+                    <TabItem Header="To Do">
+                        <ListBox Height="200" Margin="5 0 5 0" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                 ItemsSource="{Binding LoadedProject.Tasks, Converter={StaticResource fullToFilteredListConverter}, ConverterParameter=ToDo}"
+                                 SelectedItem="{Binding SelectedTask, Mode=TwoWay}">
+                        <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Vertical">
+                                        <TextBlock Text="{Binding Name}" HorizontalAlignment="Center"
+                                         TextWrapping="Wrap"/>
+                                        <Separator/>
+                                    </StackPanel>
+                                </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                    </TabItem>
+                    <TabItem Header="In Progress">
+                        <ListBox Height="200" Margin="5 0 5 0" 
+                                 ItemsSource="{Binding LoadedProject.Tasks, Converter={StaticResource fullToFilteredListConverter}, ConverterParameter=InProgress}"
+                                 SelectedItem="{Binding SelectedTask, Mode=TwoWay}">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Vertical">
+                                        <TextBlock Text="{Binding Name}" HorizontalAlignment="Center"
+                                         TextWrapping="Wrap"/>
+                                        <Separator/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </TabItem>
+                    <TabItem Header="Complete">
+                        <ListBox Height="200" Margin="5 0 5 0"
+                                 ItemsSource="{Binding LoadedProject.Tasks, Converter={StaticResource fullToFilteredListConverter}, ConverterParameter=Complete}"
+                                 SelectedItem="{Binding SelectedTask, Mode=TwoWay}">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Vertical">
+                                        <TextBlock Text="{Binding Name}" HorizontalAlignment="Center"
+                                         TextWrapping="Wrap"/>
+                                        <Separator/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </TabItem>
+                </TabControl>
+            </StackPanel>
+        </StackPanel>
+        <StackPanel Orientation="Vertical" Margin="10 0 0 0" IsEnabled="{Binding SelectedTask, Converter={StaticResource nullToBoolConverter}}">
+            <StackPanel Orientation="Vertical" Background="LightGray">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="{Binding SelectedTask.Name}" 
+                               Width="230" Margin="10 5 10 5"
+                               FontSize="15" TextWrapping="Wrap"/>
+                    <TextBox Text="{Binding SelectedTask.Stage}" Margin="10 5 10 5" 
+                             FontSize="15" HorizontalContentAlignment="Center"
+                             IsReadOnly="True" Width="80" Height="25"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <TextBox Text="{Binding SelectedTask.Description}" FontSize="13"
+                             Width="230" Height="80" Margin="10 5 10 5"
+                             TextWrapping="Wrap"/>
+                    <StackPanel Orientation="Vertical" Margin="10 5 10 5">
+                        <Button Content="Begin Work" FontSize="15"
+                                Height="50" Width="80"
+                                Command="{Binding BeginStopWorkCommand}" CommandParameter="{Binding ElementName=taskListTabs}"/>
+                        <TextBox Text="0h 0m" TextAlignment="Center" FontSize="15" 
+                                 Height="30" Width="80"/>
+                    </StackPanel>
+                </StackPanel>
+                <StackPanel Orientation="Vertical">
+                    <Label Content="Notes" HorizontalAlignment="Center" 
+                           FontSize="15" FontWeight="Bold"/>
+                    <StackPanel Orientation="Horizontal" Background="Gray" Margin="5 0 5 0">
+                        <Button Content="Add" HorizontalAlignment="Center" Margin="2"/>
+                        <Button Content="Edit" HorizontalAlignment="Center" Margin="2"/>
+                        <Button Content="Delete" HorizontalAlignment="Center" Margin="2"/>
+                    </StackPanel>
+                    <ListBox Height="150" Margin="5 0 5 5">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBox Text="" Width="280" HorizontalAlignment="Center"
+                                         TextWrapping="Wrap"/>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                    <Button Content="Complete  task!" Margin="5" Height="30"/>
+                </StackPanel>
+            </StackPanel>
+        </StackPanel>
+    </StackPanel>
+</Page>

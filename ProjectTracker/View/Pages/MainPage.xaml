@@ -1,0 +1,142 @@
+﻿<Page x:Class="ProjectTracker.View.Pages.MainPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:ProjectTracker.View.Pages"
+      xmlns:vm="clr-namespace:ProjectTracker.ViewModel.PageViewModels"
+      xmlns:converters="clr-namespace:ProjectTracker.ViewModel.Converters"
+      xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="MainPage">
+    <Page.Resources>
+        <converters:IsNullToBoolConverter x:Key="IsNullToBoolConverter"/>
+        <converters:IsNullToDoubleConverter x:Key="IsNullToDoubleConverter"/>
+    </Page.Resources>
+
+    <StackPanel Orientation="Vertical" DataContext="{StaticResource MainPageVM}"
+                HorizontalAlignment="Center" VerticalAlignment="Center">
+        <StackPanel Orientation="Horizontal">
+            <StackPanel Orientation="Vertical" Background="LightGray"
+                        Margin="0 0 50 0" Width="200">
+                <StackPanel Orientation="Horizontal" >
+                    <Button Content="Open" Margin="5 5 5 0"
+                            Command="{Binding MPOpenProjectCommand}" CommandParameter="{StaticResource MainPageVM}"/>
+                    <Button Content="Close" Margin="5 5 5 0"/>
+                </StackPanel>
+                <Separator Margin="5"/>
+                <Label Content="Working on:" HorizontalAlignment="Center"/>
+                <TextBlock Text="{Binding LoadedProject.Name}" 
+                           FontSize="15" TextWrapping="Wrap" TextAlignment="Center"/>
+                <Separator Margin="5 10 5 10"/>
+                <TextBlock Text="{Binding LoadedProject.Descsription}" 
+                           TextWrapping="Wrap" TextAlignment="Center" 
+                           FontSize="10" Margin="10 0 10 0"/>
+                <Button Content="Wrap it up" Margin="10 30 10 0"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Background="LightGray">
+                <StackPanel Orientation="Vertical">
+                    <Label Content="To Do:" HorizontalAlignment="Center"/>
+                    <Separator Margin="5"/>
+                    <ListBox x:Name="toDoListBox" ItemsSource="{Binding ToDoTasks}"
+                             SelectedItem="{Binding SelectedTask, Mode=OneWayToSource}"
+                             GotFocus="ListBox_GotFocus"
+                             Width="180" Height="200" Margin="5">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Vertical">
+                                    <Label Content="{Binding Name}"/>
+                                    <StackPanel Orientation="Horizontal">
+                                        <Label Content="Working: "/>
+                                        <RadioButton IsChecked="{Binding IsBeingWorkedOn}" IsEnabled="False" Background="Green" VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                    <Separator/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </StackPanel>
+                <Separator Width="10"/>
+                <StackPanel Orientation="Vertical">
+                    <Label Content="In Progress:" HorizontalAlignment="Center"/>
+                    <Separator Margin="5"/>
+                    <ListBox x:Name="inProgressListBox" ItemsSource="{Binding InProgressTasks}" 
+                             SelectedItem="{Binding SelectedTask, Mode=OneWayToSource}"
+                             GotFocus="ListBox_GotFocus"
+                             Width="180" Height="200" Margin="5">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Vertical">
+                                    <Label Content="{Binding Name}"/>
+                                    <StackPanel Orientation="Horizontal">
+                                        <Label Content="Working: "/>
+                                        <RadioButton IsChecked="{Binding IsBeingWorkedOn}" IsEnabled="False" Background="Green" VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                    <Separator/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </StackPanel>
+                <Separator Width="10"/>
+                <StackPanel Orientation="Vertical">
+                    <Label Content="Completed:" HorizontalAlignment="Center"/>
+                    <Separator Margin="5"/>
+                    <ListBox x:Name="completedListbox" ItemsSource="{Binding CompletedTasks}" 
+                             SelectedItem="{Binding SelectedTask, Mode=OneWayToSource}"
+                             GotFocus="ListBox_GotFocus"
+                             Width="180" Height="200" Margin="5">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Vertical">
+                                    <Label Content="{Binding Name}"/>
+                                    <StackPanel Orientation="Horizontal">
+                                        <Label Content="Working: "/>
+                                        <RadioButton IsChecked="{Binding IsBeingWorkedOn}" IsEnabled="False" Background="Green" VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                    <Separator/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </StackPanel>
+            </StackPanel>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" Background="LightGray" Margin="100 20 100 10" Height="130" HorizontalAlignment="Center">
+            <StackPanel Orientation="Vertical" HorizontalAlignment="Center" Margin="5" Width="300">
+                <TextBlock Text="{Binding SelectedTask.Name}"  HorizontalAlignment="Center" />
+                <Separator/>
+                <TextBox Text="{Binding SelectedTask.Description}" TextWrapping="Wrap"
+                         HorizontalAlignment="Center" IsReadOnly="True"
+                         Width="280" Height="70" Margin="0 5 0 0"
+                         Opacity="{Binding SelectedTask, Converter={StaticResource IsNullToDoubleConverter}}"/>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <Label Content="Task stage:"/>
+                    <Label Content="{Binding SelectedTask.Stage}"/>
+                    <Label Content="Time spent on task:"/>
+                    <Label>
+                        <AccessText>
+                            <MultiBinding StringFormat="{}{0}h : {1}m">
+                                <Binding Path="SelectedTask.TimeSpentOnTask.Hours"/>
+                                <Binding Path="SelectedTask.TimeSpentOnTask.Minutes"/>
+                            </MultiBinding>
+                        </AccessText>
+                    </Label>
+                </StackPanel>
+            </StackPanel>
+            <StackPanel Orientation="Vertical" HorizontalAlignment="Right" Margin="5">
+                <Button Content="Complete!" Width="80"  HorizontalAlignment="Center"
+                        IsEnabled="{Binding SelectedTask, Converter={StaticResource IsNullToBoolConverter}}"
+                        Command="{Binding MPCompleteTaskCommand}" CommandParameter="{StaticResource MainPageVM}"/>
+                <Separator/>
+                <ToggleButton Content="Begin Work" IsChecked="{Binding SelectedTask.IsBeingWorkedOn, Mode=TwoWay}"
+                              Command="{Binding MPBeginStopWorkCommand}" CommandParameter="{StaticResource MainPageVM}"
+                              IsEnabled="{Binding SelectedTask, Converter={StaticResource IsNullToBoolConverter}}"
+                              Checked="ToggleButton_Pressed" Unchecked="ToggleButton_Pressed"
+                              Width="80" Height="80" HorizontalAlignment="Center">
+                </ToggleButton>
+            </StackPanel>
+        </StackPanel>
+    </StackPanel>
+</Page>

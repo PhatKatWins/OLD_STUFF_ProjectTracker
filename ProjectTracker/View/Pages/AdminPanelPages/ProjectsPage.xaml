@@ -1,0 +1,91 @@
+﻿<Page x:Class="ProjectTracker.View.Pages.AdminPanelPages.ProjectsPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:ProjectTracker.View.Pages.AdminPanelPages"
+      xmlns:vm="clr-namespace:ProjectTracker.ViewModel.PageViewModels"
+      xmlns:converters="clr-namespace:ProjectTracker.ViewModel.Converters"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="ProjectsPage">
+    <Page.Resources>
+        <vm:ProjectsPageViewModel x:Key="VM"/>
+        <converters:IsNullToDoubleConverter x:Key="nullToDoubleConverter"/>
+        <converters:IsNullToBoolConverter x:Key="nullToBoolConverter"/>
+    </Page.Resources>
+    <StackPanel Orientation="Vertical" DataContext="{StaticResource VM}"
+                HorizontalAlignment="Center" VerticalAlignment="Center">
+        <StackPanel Orientation="Horizontal" 
+                HorizontalAlignment="Center" VerticalAlignment="Center">
+            <StackPanel DockPanel.Dock="Left" Orientation="Vertical" 
+                    Margin="5" Background="LightGray" Width="120">
+                <StackPanel Orientation="Horizontal">
+                    <Button Content="New" Margin="2" Command="{Binding NewProjectCommand}"/>
+                    <Button Content="Open" Margin="2" Command="{Binding OpenProjectCommand}"/>
+                    <Button Content="Delete" Margin="2"
+                        Opacity="{Binding Project, Converter={StaticResource nullToDoubleConverter}}"
+                        IsEnabled="{Binding Project, Converter={StaticResource nullToBoolConverter}}"/>
+                </StackPanel>
+                <Separator/>
+                <Label Content="Project name:" />
+                <TextBox Text="{Binding Project.Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="5 0" 
+                     Opacity="{Binding Project, Converter={StaticResource nullToDoubleConverter}}"
+                     IsEnabled="{Binding Project, Converter={StaticResource nullToBoolConverter}}"/>
+                <Label Content="Description:"/>
+                <TextBox Text="{Binding Project.Descsription, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="5 0" 
+                     Opacity="{Binding Project, Converter={StaticResource nullToDoubleConverter}}"
+                     IsEnabled="{Binding Project, Converter={StaticResource nullToBoolConverter}}"/>
+                <Label Content="Created on:"/>
+                <Label Content="{Binding Project.DateOfCreation.Date}"/>
+                <Label Content="Last modified:"/>
+                <Label Content="{Binding Project.DateOfLastEdit.Date}"/>
+            </StackPanel>
+            <Separator Width="10"/>
+            <StackPanel DockPanel.Dock="Left" Orientation="Vertical" 
+                    Margin="5" Background="LightGray" Width="150">
+                <StackPanel Orientation="Horizontal">
+                    <Button Content="Add" Margin="2"
+                        Command="{Binding AddTaskCommand}"
+                        Opacity="{Binding Project, Converter={StaticResource nullToDoubleConverter}}"
+                        IsEnabled="{Binding Project, Converter={StaticResource nullToBoolConverter}}"/>
+                    <Button Content="Remove" Margin="2"
+                        Command="{Binding RemoveTaskCommand}"
+                        Opacity="{Binding Project, Converter={StaticResource nullToDoubleConverter}}"
+                        IsEnabled="{Binding Project, Converter={StaticResource nullToBoolConverter}}"/>
+                </StackPanel>
+                <Separator/>
+                <Label Content="Tasks:"/>
+                <ListBox Height="250" Margin="5 0 5 10"
+                     ItemsSource="{Binding Project.Tasks}" SelectedItem="{Binding SelectedTask, Mode=OneWayToSource}"
+                     Opacity="{Binding Project, Converter={StaticResource nullToDoubleConverter}}"
+                     IsEnabled="{Binding Project, Converter={StaticResource nullToBoolConverter}}">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <Label Content="{Binding Name}"/>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </StackPanel>
+            <Separator Width="10"/>
+            <StackPanel DockPanel.Dock="Left" Orientation="Vertical" 
+                    Margin="5" Background="LightGray" Width="120">
+                <Label Content="Task Name:"/>
+                <TextBox Text="{Binding SelectedTask.Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="5 0"/>
+                <Label Content="Description:"/>
+                <TextBox Text="{Binding SelectedTask.Description, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="5 0"/>
+                <Label Content="Task state:"/>
+                <ComboBox Margin="5 0" ItemsSource="{Binding EnumList}"
+                          SelectedItem="{Binding SelectedTask.Stage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                <Label Content="Last worked on:"/>
+                <TextBox Text="{Binding SelectedTask.LastWorkStartedOn, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="5 0"/>
+                <Label Content="Time spent on task:"/>
+                <TextBox Text="{Binding SelectedTask.TimeSpentOnTask, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="5 0"/>
+            </StackPanel>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button Content="Save project" Margin="0 0 5 0"
+                    Command="{Binding SaveProjectCommand}"/>
+        </StackPanel>
+    </StackPanel>
+</Page>

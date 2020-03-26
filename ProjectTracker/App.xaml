@@ -1,0 +1,13 @@
+﻿<Application x:Class="ProjectTracker.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:ProjectTracker"
+             xmlns:mainWindowVM="clr-namespace:ProjectTracker.ViewModel"
+             xmlns:pageVMs="clr-namespace:ProjectTracker.ViewModel.PageViewModels"
+             StartupUri="View/MainWindow.xaml">
+    <Application.Resources>
+        <mainWindowVM:MainWindowViewModel x:Key="MainWindowVM"/>
+        <pageVMs:MainPageViewModel x:Key="MainPageVM"/>
+        <pageVMs:WorkPageViewModel x:Key="WorkPageVM"/>
+    </Application.Resources>
+</Application>

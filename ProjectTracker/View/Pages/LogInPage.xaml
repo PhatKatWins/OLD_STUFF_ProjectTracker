@@ -1,0 +1,34 @@
+﻿<Page x:Class="ProjectTracker.View.Pages.LogInPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:ProjectTracker.View.Pages"
+      xmlns:vm="clr-namespace:ProjectTracker.ViewModel.PageViewModels"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="LogInPage">
+    <Page.Resources>
+        <vm:LogInPageViewModel x:Key="VM"/>
+    </Page.Resources>
+
+    <Grid DataContext="{StaticResource VM}">
+        <StackPanel Orientation="Vertical" Background="LightGray"
+                    Width="250" Height="300">
+            <Label Content="User Name:" FontSize="15"
+                   Margin="20 50 0 0" HorizontalAlignment="Left"/>
+            <TextBox Margin="20 0 20 0" Text="{Binding User.Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            <Label Content="User Number:" FontSize="15"
+                   Margin="20 0 0 0" HorizontalAlignment="Left"/>
+            <TextBox Margin="20 0 20 0" Text="{Binding User.Number, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                     TextChanged="TextBox_TextChanged" MaxLength="4"/>
+            <Button Content="Log In" Margin="50 10"
+                    Command="{Binding LogInCommand}"/>
+            <Label HorizontalAlignment="Center">
+                <Hyperlink Command="{Binding NoAccountCommand}">
+                    I dont have an account!
+                </Hyperlink>
+            </Label>
+        </StackPanel>
+    </Grid>
+</Page>
