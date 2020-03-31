@@ -28,16 +28,26 @@ namespace ProjectTracker.ViewModel.PageViewModels
         public ProjectTask SelectedTask
         {
             get { return _selectedTask; }
-            set { _selectedTask = value; OnPropertyChanged("SelectedTask"); }
+            set 
+            { 
+                _selectedTask = value; OnPropertyChanged("SelectedTask");
+                CompleteTaskCommand.RaiseCanExecuteChanged();
+            }
         }
+        /// <summary>
+        /// Holds the task being worked on, if any.
+        /// </summary>
+        public ProjectTask TaskWorkedOn { get; set; }
 
         public WPOpenProjectCommand WPOpenProjectCommand { get; set; }
         public BeginStopWorkCommand BeginStopWorkCommand { get; set; }
+        public CompleteTaskCommand CompleteTaskCommand { get; set; }
 
         public WorkPageViewModel()
         {
             WPOpenProjectCommand = new WPOpenProjectCommand(this);
             BeginStopWorkCommand = new BeginStopWorkCommand(this);
+            CompleteTaskCommand = new CompleteTaskCommand(this);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

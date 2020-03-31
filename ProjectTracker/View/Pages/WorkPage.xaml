@@ -103,7 +103,7 @@
                         <Button Content="Begin Work" FontSize="15"
                                 Height="50" Width="80"
                                 Command="{Binding BeginStopWorkCommand}" CommandParameter="{Binding ElementName=taskListTabs}"/>
-                        <TextBox Text="0h 0m" TextAlignment="Center" FontSize="15" 
+                        <TextBox Text="{Binding SelectedTask.TimeSpentOnTask}" TextAlignment="Center" FontSize="15" 
                                  Height="30" Width="80"/>
                     </StackPanel>
                 </StackPanel>
@@ -123,7 +123,8 @@
                             </DataTemplate>
                         </ListBox.ItemTemplate>
                     </ListBox>
-                    <Button Content="Complete  task!" Margin="5" Height="30"/>
+                    <Button Content="Complete  task!" Margin="5" Height="30"
+                            Command="{Binding CompleteTaskCommand}"/>
                 </StackPanel>
             </StackPanel>
         </StackPanel>

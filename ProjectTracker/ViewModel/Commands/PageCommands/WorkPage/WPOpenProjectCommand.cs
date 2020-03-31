@@ -1,4 +1,6 @@
 ﻿using Microsoft.Win32;
+using ProjectTracker.View;
+using ProjectTracker.View.Pages;
 using ProjectTracker.ViewModel.Helpers;
 using ProjectTracker.ViewModel.PageViewModels;
 using System;
@@ -29,14 +31,8 @@ namespace ProjectTracker.ViewModel.Commands.PageCommands.WorkPage
 
         public void Execute(object parameter)
         {
-            OpenFileDialog dialog = new OpenFileDialog();
-            dialog.InitialDirectory = ProjectFileHelper.projectSaveFolder;
-            dialog.Filter = "Project Tracker files (*.ptf)|*.ptf";
-
-            if (dialog.ShowDialog() == true)
-            {
-                ViewModel.LoadedProject = ProjectFileHelper.ReadProjectFromFile(dialog.FileName);
-            }
+            ProjectExplorerWindow projectExplorer = new ProjectExplorerWindow();
+            projectExplorer.ShowDialog();
         }
     }
 }
