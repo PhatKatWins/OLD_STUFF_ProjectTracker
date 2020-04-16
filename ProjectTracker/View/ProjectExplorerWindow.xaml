@@ -7,6 +7,7 @@
         xmlns:vm="clr-namespace:ProjectTracker.ViewModel"
         xmlns:converters="clr-namespace:ProjectTracker.ViewModel.Converters"
         mc:Ignorable="d"
+        x:Name="projectExplorerWindow"
         Title="Load project" Height="450" Width="500" ResizeMode="NoResize">
     <Window.Resources>
         <vm:ProjectExplorerWindowViewModel x:Key="VM"/>
@@ -49,7 +50,7 @@
             </StackPanel>
             <Button Content="Load Project" Margin="5"
                     FontSize="15" FontWeight="bold"
-                    Command="{Binding LoadProjectCommand}"/>
+                    Command="{Binding LoadProjectCommand}" CommandParameter="{Binding ElementName=projectExplorerWindow}"/>
         </StackPanel>
     </StackPanel>
 </Window>

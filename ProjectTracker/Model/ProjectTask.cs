@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Text;
 
@@ -53,6 +54,14 @@ namespace ProjectTracker.Model
         {
             get { return timeSpentOnTask; }
             set { timeSpentOnTask = value; OnPropertyChanged("TimeSpentOnTask"); }
+        }
+
+        private ObservableCollection<Note> _notes;
+
+        public ObservableCollection<Note> Notes
+        {
+            get { return _notes; }
+            set { _notes = value; OnPropertyChanged("Notes"); }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

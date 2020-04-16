@@ -28,10 +28,14 @@ namespace ProjectTracker.ViewModel.Commands.PageCommands.WorkPage
         {
             ProjectTask task = ViewModel.SelectedTask;
 
-            if(MessageBox.Show("Test", "Test", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
+            if(MessageBox.Show("Are you sure you want to mark the task as completed?", "Complete task", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
             {
-                ViewModel.SelectedTask.Stage = Stage.Completed;
-                ViewModel.LoadedProject.OnPropertyChanged("Are you sure you want to mark the task as completed?");
+                task.Stage = Stage.Completed;
+                ViewModel.LoadedProject.OnPropertyChanged("Tasks");
+                task.IsBeingWorkedOn = false;
+                task.TimeSpentOnTask = DateTime.Now - task.LastWorkStartedOn;
+                ViewModel.TaskWorkedOn = null;
+                ViewModel.LoadedProject.RecalculateTimeSpent();
 
                 ViewModel.SelectedTask = task;
             }

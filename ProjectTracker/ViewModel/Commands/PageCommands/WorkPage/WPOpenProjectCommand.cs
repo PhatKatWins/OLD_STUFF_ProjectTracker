@@ -6,6 +6,7 @@ using ProjectTracker.ViewModel.PageViewModels;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Windows;
 using System.Windows.Input;
 
 namespace ProjectTracker.ViewModel.Commands.PageCommands.WorkPage
@@ -31,8 +32,17 @@ namespace ProjectTracker.ViewModel.Commands.PageCommands.WorkPage
 
         public void Execute(object parameter)
         {
-            ProjectExplorerWindow projectExplorer = new ProjectExplorerWindow();
-            projectExplorer.ShowDialog();
+            if(ViewModel.LoadedProject != null)
+            {
+                MessageBox.Show("You currently have a project open. To avoid losing any changes made please use the 'Close' button first.", "Load new project", MessageBoxButton.OK);
+            }
+            else
+            {
+                ProjectExplorerWindow projectExplorer = new ProjectExplorerWindow();
+                projectExplorer.Owner = App.Current.MainWindow;
+                projectExplorer.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+                projectExplorer.ShowDialog();
+            }
         }
     }
 }

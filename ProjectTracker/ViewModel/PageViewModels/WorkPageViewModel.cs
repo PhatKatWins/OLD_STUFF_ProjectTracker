@@ -39,15 +39,37 @@ namespace ProjectTracker.ViewModel.PageViewModels
         /// </summary>
         public ProjectTask TaskWorkedOn { get; set; }
 
+        /// <summary>
+        /// The note, selected in the Notes panel
+        /// </summary>
+        private Note _selectedNote;
+
+        public Note SelectedNote
+        {
+            get { return _selectedNote; }
+            set { _selectedNote = value; OnPropertyChanged("SelectedNote"); }
+        }
+
         public WPOpenProjectCommand WPOpenProjectCommand { get; set; }
         public BeginStopWorkCommand BeginStopWorkCommand { get; set; }
         public CompleteTaskCommand CompleteTaskCommand { get; set; }
+        public AddNoteCommand AddNoteCommand { get; set; }
+        public ToggleNotesCommand ToggleNotesCommand { get; set; }
+        public CloseProjectCommand CloseProjectCommand { get; set; }
+        public DeleteNoteCommand DeleteNoteCommand { get; set; }
+        public EditNoteCommand EditNoteCommand { get; set; }
 
         public WorkPageViewModel()
         {
             WPOpenProjectCommand = new WPOpenProjectCommand(this);
             BeginStopWorkCommand = new BeginStopWorkCommand(this);
             CompleteTaskCommand = new CompleteTaskCommand(this);
+            AddNoteCommand = new AddNoteCommand(this);
+            ToggleNotesCommand = new ToggleNotesCommand();
+            CloseProjectCommand = new CloseProjectCommand(this);
+            DeleteNoteCommand = new DeleteNoteCommand();
+            EditNoteCommand = new EditNoteCommand(this);
+
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

@@ -1,0 +1,23 @@
+﻿<Window x:Class="ProjectTracker.View.NoteEditorWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ProjectTracker.View"
+        mc:Ignorable="d"
+        x:Name="noteEditorWindow"
+        Title="Note editor" Height="200" Width="450"
+        ResizeMode="NoResize" BorderThickness="0"
+        DataContext="{Binding RelativeSource={RelativeSource Self}}">
+    <StackPanel Orientation="Vertical" Background="LightGray">
+        <TextBox Margin="5" DockPanel.Dock="Left" 
+                 Width="430" Height="100"
+                 Text="{Binding Note.Text}"/>
+        <StackPanel Orientation="Vertical" DockPanel.Dock="Right" Margin="10 2 10 5">
+            <Button Content="Save" DockPanel.Dock="Top" Margin="2"
+                    Command="{Binding SaveCommand}" CommandParameter="{Binding ElementName=noteEditorWindow}"/>
+            <Button Content="Cancel" DockPanel.Dock="Bottom" Margin="2"
+                    Command="{Binding CancelCommand}" CommandParameter="{Binding ElementName=noteEditorWindow}"/>
+        </StackPanel>
+    </StackPanel>
+</Window>

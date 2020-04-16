@@ -56,7 +56,8 @@ namespace ProjectTracker.ViewModel.Commands.PageCommands.WorkPage
                 else
                 {
                     task.IsBeingWorkedOn = false;
-                    task.TimeSpentOnTask = DateTime.Now - task.LastWorkStartedOn;
+                    task.TimeSpentOnTask += DateTime.Now - task.LastWorkStartedOn;
+                    ViewModel.LoadedProject.RecalculateTimeSpent();
                     ViewModel.TaskWorkedOn = null;
                 }
             }

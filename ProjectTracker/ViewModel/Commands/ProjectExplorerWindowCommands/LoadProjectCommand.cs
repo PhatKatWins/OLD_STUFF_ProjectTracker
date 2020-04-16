@@ -26,7 +26,7 @@ namespace ProjectTracker.ViewModel.Commands.ProjectExplorerWindowCommands
         public void Execute(object parameter)
         {
             ((WorkPageViewModel)Application.Current.Resources["WorkPageVM"]).LoadedProject = ViewModel.SelectedProject;
-            Application.Current.Windows[1].Close();
+            ((Window)parameter).Close();
         }
     }
 }

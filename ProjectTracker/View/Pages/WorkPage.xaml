@@ -5,12 +5,15 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:ProjectTracker.View.Pages"
       xmlns:c="clr-namespace:ProjectTracker.ViewModel.Converters"
+      xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
       Title="WorkPage">
     <Page.Resources>
         <c:IsNullToBoolConverter x:Key="nullToBoolConverter"/>
+        <c:BoolToVisibilityConverter x:Key="boolToVisibilityConverter"/>
         <c:FullToFilteredListConverter x:Key="fullToFilteredListConverter"/>
+        <c:ReverseVisibilityConverter x:Key="reverseVisibilityConverter"/>
     </Page.Resources>
 
     <StackPanel Orientation="Horizontal" DataContext="{StaticResource WorkPageVM}"
@@ -22,7 +25,8 @@
                 <StackPanel Orientation="Horizontal" Background="Gray">
                     <Button Content="Open" Margin="5"
                             Command="{Binding WPOpenProjectCommand}"/>
-                    <Button Content="Wrap it up" Margin="5"
+                    <Button Content="Close" Margin="5"
+                            Command="{Binding CloseProjectCommand}"
                         IsEnabled="{Binding LoadedProject, Converter={StaticResource nullToBoolConverter}}"/>
                 </StackPanel>
                 <Separator Margin="5"/>
@@ -33,6 +37,11 @@
                 <TextBlock Text="{Binding LoadedProject.Descsription}" 
                            TextWrapping="Wrap" TextAlignment="Center" 
                            FontSize="10" Margin="10 0 10 0"/>
+                <Separator Margin="5"/>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <Label Content="Total time spent:" FontSize="10"/>
+                    <Label Content="{Binding LoadedProject.TimeSpentOnProject}" FontSize="10" FontWeight="Bold"/>
+                </StackPanel>
             </StackPanel>
             <StackPanel Orientation="Vertical" Width="200">
                 <TabControl x:Name="taskListTabs" TabStripPlacement="top" Height="230"
@@ -59,8 +68,13 @@
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Vertical">
-                                        <TextBlock Text="{Binding Name}" HorizontalAlignment="Center"
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="{Binding Name}" HorizontalAlignment="Center"
                                          TextWrapping="Wrap"/>
+                                            <Ellipse Width="10" Height="10" 
+                                                     Fill="Green" Margin="10 0"
+                                                     Visibility="{Binding IsBeingWorkedOn, Converter={StaticResource boolToVisibilityConverter}}"/>
+                                        </StackPanel>
                                         <Separator/>
                                     </StackPanel>
                                 </DataTemplate>
@@ -86,7 +100,7 @@
             </StackPanel>
         </StackPanel>
         <StackPanel Orientation="Vertical" Margin="10 0 0 0" IsEnabled="{Binding SelectedTask, Converter={StaticResource nullToBoolConverter}}">
-            <StackPanel Orientation="Vertical" Background="LightGray">
+            <StackPanel Orientation="Vertical" Background="LightGray" MaxHeight="400">
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="{Binding SelectedTask.Name}" 
                                Width="230" Margin="10 5 10 5"
@@ -98,7 +112,7 @@
                 <StackPanel Orientation="Horizontal">
                     <TextBox Text="{Binding SelectedTask.Description}" FontSize="13"
                              Width="230" Height="80" Margin="10 5 10 5"
-                             TextWrapping="Wrap"/>
+                             TextWrapping="Wrap" VerticalScrollBarVisibility="Auto"/>
                     <StackPanel Orientation="Vertical" Margin="10 5 10 5">
                         <Button Content="Begin Work" FontSize="15"
                                 Height="50" Width="80"
@@ -107,25 +121,43 @@
                                  Height="30" Width="80"/>
                     </StackPanel>
                 </StackPanel>
-                <StackPanel Orientation="Vertical">
-                    <Label Content="Notes" HorizontalAlignment="Center" 
-                           FontSize="15" FontWeight="Bold"/>
+                <ToggleButton Content="Notes" HorizontalAlignment="Center" 
+                              FontSize="15" FontWeight="Bold" 
+                              Width="100" Margin="2"
+                              Command="{Binding ToggleNotesCommand}" CommandParameter="{Binding ElementName=notePanel}"/>
+                <StackPanel x:Name="notePanel" Orientation="Vertical" Visibility="Collapsed">
                     <StackPanel Orientation="Horizontal" Background="Gray" Margin="5 0 5 0">
-                        <Button Content="Add" HorizontalAlignment="Center" Margin="2"/>
-                        <Button Content="Edit" HorizontalAlignment="Center" Margin="2"/>
-                        <Button Content="Delete" HorizontalAlignment="Center" Margin="2"/>
+                        <Button Content="Add" HorizontalAlignment="Center" Margin="2"
+                                Command="{Binding AddNoteCommand}"/>
+                        <Button Content="Edit" HorizontalAlignment="Center" Margin="2"
+                                Command="{Binding EditNoteCommand}"
+                                IsEnabled="{Binding SelectedNote, Converter={StaticResource nullToBoolConverter}}"/>
+                        <Button Content="Delete" HorizontalAlignment="Center" Margin="2"
+                                Command="{Binding DeleteNoteCommand}"
+                                IsEnabled="{Binding SelectedNote, Converter={StaticResource nullToBoolConverter}}"/>
                     </StackPanel>
-                    <ListBox Height="150" Margin="5 0 5 5">
+                    <ListBox Height="177" Margin="5 0 5 5" 
+                             ItemsSource="{Binding SelectedTask.Notes}" SelectedItem="{Binding SelectedNote, Mode=OneWayToSource}">
                         <ListBox.ItemTemplate>
                             <DataTemplate>
-                                <TextBox Text="" Width="280" HorizontalAlignment="Center"
-                                         TextWrapping="Wrap"/>
+                                <DockPanel Width="325" Background="LightGray">
+                                    <TextBox Text="{Binding Text}" DockPanel.Dock="Left"
+                                             TextWrapping="Wrap" IsReadOnly="False" Width="250" VerticalScrollBarVisibility="Hidden"
+                                             BorderThickness="0" Margin="2" IsHitTestVisible="False">
+                                    </TextBox>
+                                    <StackPanel Orientation="Horizontal" DockPanel.Dock="Right">
+                                        <TextBox Text="{Binding Author}" DockPanel.Dock="Right"
+                                             TextWrapping="Wrap" IsReadOnly="True"
+                                             BorderThickness="0" Margin="2" Width="55"
+                                                 IsHitTestVisible="False"/>
+                                    </StackPanel>
+                                </DockPanel>
                             </DataTemplate>
                         </ListBox.ItemTemplate>
                     </ListBox>
-                    <Button Content="Complete  task!" Margin="5" Height="30"
-                            Command="{Binding CompleteTaskCommand}"/>
                 </StackPanel>
+                <Button Content="Complete  task!" Margin="5" Height="30"
+                            Command="{Binding CompleteTaskCommand}"/>
             </StackPanel>
         </StackPanel>
     </StackPanel>

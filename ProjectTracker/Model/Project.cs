@@ -9,45 +9,54 @@ namespace ProjectTracker.Model
     public class Project : INotifyPropertyChanged
     {
 
-        private string name;
+        private string _name;
 
         public string Name
         {
-            get { return name; }
-            set { name = value; OnPropertyChanged("Name"); }
+            get { return _name; }
+            set { _name = value; OnPropertyChanged("Name"); }
         }
 
-        private string description;
+        private string _description;
 
         public string Descsription
         {
-            get { return description; }
-            set { description = value; OnPropertyChanged("Description"); }
+            get { return _description; }
+            set { _description = value; OnPropertyChanged("Description"); }
         }
 
-        private DateTime dateOfCreation;
+        private DateTime _dateOfCreation;
 
         public DateTime DateOfCreation
         {
-            get { return dateOfCreation; }
-            set { dateOfCreation = value; OnPropertyChanged("DateOfCreation"); }
+            get { return _dateOfCreation; }
+            set { _dateOfCreation = value; OnPropertyChanged("DateOfCreation"); }
         }
 
-        private DateTime dateOfLastEdit;
+        private DateTime _dateOfLastEdit;
 
         public DateTime DateOfLastEdit
         {
-            get { return dateOfLastEdit; }
-            set { dateOfLastEdit = value; OnPropertyChanged("DateOfLastEdit"); }
+            get { return _dateOfLastEdit; }
+            set { _dateOfLastEdit = value; OnPropertyChanged("DateOfLastEdit"); }
 
         }
 
-        private ObservableCollection<ProjectTask> tasks;
+        private TimeSpan _timeSpentOnProject;
+
+        public TimeSpan TimeSpentOnProject
+        {
+            get { return _timeSpentOnProject; }
+            set { _timeSpentOnProject = value; OnPropertyChanged("TimeSpentOnProject"); }
+        }
+
+
+        private ObservableCollection<ProjectTask> _tasks;
 
         public ObservableCollection<ProjectTask> Tasks
         {
-            get { return tasks; }
-            set { tasks = value; OnPropertyChanged("Tasks"); }
+            get { return _tasks; }
+            set { _tasks = value; OnPropertyChanged("Tasks"); }
         }
 
 
@@ -58,6 +67,14 @@ namespace ProjectTracker.Model
             if(PropertyChanged != null)
             {
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+
+        public void RecalculateTimeSpent()
+        {
+            foreach(ProjectTask task in Tasks)
+            {
+                TimeSpentOnProject += task.TimeSpentOnTask;
             }
         }
     }
